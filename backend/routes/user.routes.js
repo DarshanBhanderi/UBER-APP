@@ -16,6 +16,14 @@ router.post('/ragister',[
 ],
 userController.ragisterUser);
 
+
+router.post('/login',[
+    body('email').isEmail().withMessage('Invalid Email'),
+    body('password').isLength({min:6}).withMessage
+    ('password mustbe at least 6 characters long'),
+],
+userController.loginUser
+)
 module.exports = router;
 
 

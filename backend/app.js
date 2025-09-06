@@ -28,7 +28,9 @@ app.get('/',(req,res)=>{
 
 });
 
-app.use('/user', userRoutes);
+app.use('/users', userRoutes);
+
+
 
 
 
