@@ -28,10 +28,10 @@ The request body must be sent as `application/json` and include the following fi
 ```json
 {
   "fullname": {
-    "firstname": "John",
-    "lastname": "Doe"
+    "firstname": "test_fristname",
+    "lastname": "test_lastname"
   },
-  "email": "john.doe@example.com",
+  "email": "test@example.com",
   "password": "securePassword123"
 }
 ```
@@ -61,9 +61,9 @@ The request body must be sent as `application/json` and include the following fi
         "_id": "64f8c0e5b9d2f8a1b2c3d4e5",
         "fullname": {
           "firstname": "John",
-          "lastname": "Doe"
+          "lastname": "test_lastname"
         },
-        "email": "john.doe@example.com"
+        "email": "test@example.com"
       }
     }
     ```
@@ -77,10 +77,10 @@ curl -X POST http://localhost:3000/user/ragister \
   -H "Content-Type: application/json" \
   -d '{
     "fullname": {
-      "firstname": "John",
-      "lastname": "Doe"
+      "firstname": "test_fristname",
+      "lastname": ""
     },
-    "email": "john.doe@example.com",
+    "email": "test@example.com",
     "password": "securePassword123"
   }'
 ```
@@ -120,7 +120,7 @@ The request body must be sent as `application/json` and include the following fi
 
 ```json
 {
-  "email": "john.doe@example.com",
+  "email": "test@example.com",
   "password": "securePassword123"
 }
 ```
@@ -147,10 +147,10 @@ The request body must be sent as `application/json` and include the following fi
       "user": {
         "_id": "64f8c0e5b9d2f8a1b2c3d4e5",
         "fullname": {
-          "firstname": "John",
-          "lastname": "Doe"
+          "firstname": "test_firstname",
+          "lastname": "test_lastname"
         },
-        "email": "john.doe@example.com"
+        "email": "test@example.com"
       }
     }
     ```
@@ -163,7 +163,7 @@ The request body must be sent as `application/json` and include the following fi
 curl -X POST http://localhost:3000/user/login \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "john.doe@example.com",
+    "email": "test@example.com",
     "password": "securePassword123"
   }'
 ```
@@ -175,3 +175,141 @@ curl -X POST http://localhost:3000/user/login \
 - Passwords are compared using `bcrypt` to ensure security.
 - A JWT token is generated and returned upon successful login.
 - Ensure the `JWT_SECRET` environment variable is set for token generation.
+
+---
+
+# User Profile Endpoint Documentation
+
+## Endpoint
+
+`GET /user/profile`
+
+This endpoint is used to retrieve the profile of the currently authenticated user.
+
+---
+
+## Headers
+
+The request must include a valid JWT token in the `Authorization` header or as a cookie.
+
+### Example Header
+
+```json
+{
+  "Authorization": "Bearer <your-jwt-token>"
+}
+```
+
+---
+
+## Responses
+
+### Success
+
+- **200 OK**
+  - Returns the authenticated user's profile.
+  - Example response:
+    ```json
+    {
+      "_id": "64f8c0e5b9d2f8a1b2c3d4e5",
+      "fullname": {
+        "firstname": "test_firstname",
+        "lastname": "test_lastname"
+      },
+      "email": "test@example.com"
+    }
+    ```
+
+### Errors
+
+- **401 Unauthorized**
+  - Token is missing, invalid, or blacklisted.
+  - Example response:
+    ```json
+    {
+      "message": "Unauthorized"
+    }
+    ```
+
+---
+
+## Example cURL Request
+
+```bash
+curl -X GET http://localhost:3000/user/profile \
+  -H "Authorization: Bearer <your-jwt-token>"
+```
+
+---
+
+## Notes
+
+- The endpoint requires the user to be authenticated.
+- Ensure the `JWT_SECRET` environment variable is set for token verification.
+
+---
+
+# User Logout Endpoint Documentation
+
+## Endpoint
+
+`GET /user/logout`
+
+This endpoint is used to log out the currently authenticated user by blacklisting their JWT token.
+
+---
+
+## Headers
+
+The request must include a valid JWT token in the `Authorization` header or as a cookie.
+
+### Example Header
+
+```json
+{
+  "Authorization": "Bearer <your-jwt-token>"
+}
+```
+
+---
+
+## Responses
+
+### Success
+
+- **200 OK**
+  - Logout successful.
+  - Example response:
+    ```json
+    {
+      "message": "Logged out"
+    }
+    ```
+
+### Errors
+
+- **401 Unauthorized**
+  - Token is missing, invalid, or blacklisted.
+  - Example response:
+    ```json
+    {
+      "message": "Unauthorized"
+    }
+    ```
+
+---
+
+## Example cURL Request
+
+```bash
+curl -X GET http://localhost:3000/user/logout \
+  -H "Authorization: Bearer <your-jwt-token>"
+```
+
+---
+
+## Notes
+
+- The endpoint requires the user to be authenticated.
+- The token is added to a blacklist to prevent further use.
+- Ensure the `JWT_SECRET` environment variable is set for token verification.
