@@ -313,3 +313,124 @@ curl -X GET http://localhost:3000/user/logout \
 - The endpoint requires the user to be authenticated.
 - The token is added to a blacklist to prevent further use.
 - Ensure the `JWT_SECRET` environment variable is set for token verification.
+
+---
+
+# Captain Routes Documentation
+
+## 1. Register Captain
+
+### Endpoint
+
+`POST /captain/register`
+
+This endpoint is used to register a new captain. Upon successful registration, it returns the created captain object.
+
+---
+
+### Request Body
+
+The request body must be sent as `application/json` and include the following fields:
+
+```json
+{
+  "fullname": {
+    "firstname": "string, required, minimum 3 characters",
+    "lastname": "string, optional, minimum 3 characters"
+  },
+  "email": "string, required, valid email format",
+  "password": "string, required, minimum 6 characters",
+  "vehicle": {
+    "color": "string, required, minimum 3 characters",
+    "plate": "string, required, minimum 3 characters",
+    "capacity": "integer, required, minimum 1",
+    "vehicleType": "string, required, one of ['car', 'motorcycle', 'auto']"
+  }
+}
+```
+
+### Example Request Body
+
+```json
+{
+  "fullname": {
+    "firstname": "John",
+    "lastname": "Doe"
+  },
+  "email": "john.doe@example.com",
+  "password": "securePassword123",
+  "vehicle": {
+    "color": "Red",
+    "plate": "ABC123",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+---
+
+### Validation Rules
+
+- `fullname.firstname`: Required, must be a string with at least 3 characters.
+- `fullname.lastname`: Optional, must be a string with at least 3 characters (if provided).
+- `email`: Required, must be a valid email address.
+- `password`: Required, must be a string with at least 6 characters.
+- `vehicle.color`: Required, must be a string with at least 3 characters.
+- `vehicle.plate`: Required, must be a string with at least 3 characters.
+- `vehicle.capacity`: Required, must be an integer with a minimum value of 1.
+- `vehicle.vehicleType`: Required, must be one of `['car', 'motorcycle', 'auto']`.
+
+---
+
+### Responses
+
+#### Success
+
+- **201 Created**
+  - Registration successful.
+  - Example response:
+    ```json
+    {
+      "_id": "64f8c0e5b9d2f8a1b2c3d4e5",
+      "fullname": {
+        "firstname": "John",
+        "lastname": "Doe"
+      },
+      "email": "john.doe@example.com",
+      "vehicle": {
+        "color": "Red",
+        "plate": "ABC123",
+        "capacity": 4,
+        "vehicleType": "car"
+      }
+    }
+    ```
+
+
+
+---
+
+### Example cURL Request
+
+```bash
+curl -X POST http://localhost:3000/captain/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "password": "securePassword123",
+    "vehicle": {
+      "color": "Red",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+  }'
+```
+
+---
+
