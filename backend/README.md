@@ -318,6 +318,8 @@ curl -X GET http://localhost:3000/user/logout \
 
 # Captain Routes Documentation
 
+---
+
 ## 1. Register Captain
 
 ### Endpoint
@@ -336,7 +338,7 @@ The request body must be sent as `application/json` and include the following fi
 {
   "fullname": {
     "firstname": "string, required, minimum 3 characters",
-    "lastname": "string, optional, minimum 3 characters"
+    "lastname": "string, required, minimum 3 characters"
   },
   "email": "string, required, valid email format",
   "password": "string, required, minimum 6 characters",
@@ -354,15 +356,15 @@ The request body must be sent as `application/json` and include the following fi
 ```json
 {
   "fullname": {
-    "firstname": "John",
-    "lastname": "Doe"
+    "firstname": "test_captain_firstname",
+    "lastname": "test_captain_lastname"
   },
-  "email": "john.doe@example.com",
-  "password": "securePassword123",
+  "email": "test_email1@gmail.com",
+  "password": "test_cpatin",
   "vehicle": {
-    "color": "Red",
-    "plate": "ABC123",
-    "capacity": 4,
+    "color": "red",
+    "plate": "MP 04 XY 6204",
+    "capacity": 3,
     "vehicleType": "car"
   }
 }
@@ -373,7 +375,7 @@ The request body must be sent as `application/json` and include the following fi
 ### Validation Rules
 
 - `fullname.firstname`: Required, must be a string with at least 3 characters.
-- `fullname.lastname`: Optional, must be a string with at least 3 characters (if provided).
+- `fullname.lastname`: Required, must be a string with at least 3 characters.
 - `email`: Required, must be a valid email address.
 - `password`: Required, must be a string with at least 6 characters.
 - `vehicle.color`: Required, must be a string with at least 3 characters.
@@ -392,17 +394,118 @@ The request body must be sent as `application/json` and include the following fi
   - Example response:
     ```json
     {
-      "_id": "64f8c0e5b9d2f8a1b2c3d4e5",
+      "_id": "64f8c0e5b9d2f8a1b2c3d4e6",
       "fullname": {
-        "firstname": "John",
-        "lastname": "Doe"
+        "firstname": "test_captain_firstname",
+        "lastname": "test_captain_lastname"
       },
-      "email": "john.doe@example.com",
+      "email": "test_email1@gmail.com",
       "vehicle": {
-        "color": "Red",
-        "plate": "ABC123",
-        "capacity": 4,
+        "color": "red",
+        "plate": "MP 04 XY 6204",
+        "capacity": 3,
         "vehicleType": "car"
+      }
+    }
+    ```
+
+
+
+### Example cURL Request
+
+```bash
+curl -X POST http://localhost:3000/captain/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fullname": {
+      "firstname": "test_captain_firstname",
+      "lastname": "test_captain_lastname"
+    },
+    "email": "test_email1@gmail.com",
+    "password": "test_cpatin",
+    "vehicle": {
+      "color": "red",
+      "plate": "MP 04 XY 6204",
+      "capacity": 3,
+      "vehicleType": "car"
+    }
+  }'
+```
+
+---
+
+## Notes
+
+- Ensure the `JWT_SECRET` environment variable is set for token generation.
+- Passwords are hashed using `bcrypt` before being stored in the database.
+- The `fullname.firstname` and `fullname.lastname` fields are required for proper captain registration.
+
+---
+
+# Captain Login Endpoint Documentation
+
+---
+
+## Endpoint
+
+`POST /captain/login`
+
+This endpoint is used to authenticate a captain. Upon successful login, it returns a JWT token and the captain object.
+
+---
+
+### Request Body
+
+The request body must be sent as `application/json` and include the following fields:
+
+```json
+{
+  "email": "string, required, valid email format",         // Captain's email address
+  "password": "string, required, minimum 6 characters"     // Captain's password
+}
+```
+
+### Example Request Body
+
+```json
+{
+  "email": "test_email1@gmail.com",
+  "password": "test_cpatin"
+}
+```
+
+---
+
+### Validation Rules
+
+- `email`: Required, must be a valid email address.
+- `password`: Required, must be a string with at least 6 characters.
+
+---
+
+### Responses
+
+#### Success
+
+- **200 OK**
+  - Login successful.
+  - Example response:
+    ```json
+    {
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...", // JWT token for authentication
+      "captain": {
+        "_id": "64f8c0e5b9d2f8a1b2c3d4e6",               // Unique ID of the captain
+        "fullname": {
+          "firstname": "test_captain_firstname",         // Captain's first name
+          "lastname": "test_captain_lastname"            // Captain's last name
+        },
+        "email": "test_email1@gmail.com",                // Captain's email address
+        "vehicle": {
+          "color": "red",                                // Vehicle color
+          "plate": "MP 04 XY 6204",                      // Vehicle plate number
+          "capacity": 3,                                 // Vehicle capacity
+          "vehicleType": "car"                           // Vehicle type
+        }
       }
     }
     ```
@@ -414,23 +517,151 @@ The request body must be sent as `application/json` and include the following fi
 ### Example cURL Request
 
 ```bash
-curl -X POST http://localhost:3000/captain/register \
+curl -X POST http://localhost:3000/captain/login \
   -H "Content-Type: application/json" \
   -d '{
-    "fullname": {
-      "firstname": "John",
-      "lastname": "Doe"
-    },
-    "email": "john.doe@example.com",
-    "password": "securePassword123",
-    "vehicle": {
-      "color": "Red",
-      "plate": "ABC123",
-      "capacity": 4,
-      "vehicleType": "car"
-    }
+    "email": "test_email1@gmail.com",
+    "password": "test_cpatin"
   }'
 ```
 
 ---
+
+## Notes
+
+- Passwords are compared using `bcrypt` to ensure security.
+- A JWT token is generated and returned upon successful login.
+- Ensure the `JWT_SECRET` environment variable is set for token generation.
+- The token must be included in subsequent requests to access protected routes.
+
+---
+
+# Captain Profile Endpoint Documentation
+
+---
+
+## Endpoint
+
+`GET /captain/profile`
+
+This endpoint is used to retrieve the profile of the currently authenticated captain.
+
+---
+
+### Headers
+
+The request must include a valid JWT token in the `Authorization` header or as a cookie.
+
+### Example Header
+
+```json
+{
+  "Authorization": "Bearer <your-jwt-token>"
+}
+```
+
+---
+
+### Responses
+
+#### Success
+
+- **200 OK**
+  - Returns the authenticated captain's profile.
+  - Example response:
+    ```json
+    {
+      "captain": {
+        "_id": "64f8c0e5b9d2f8a1b2c3d4e6",               // Unique ID of the captain
+        "fullname": {
+          "firstname": "test_captain_firstname",         // Captain's first name
+          "lastname": "test_captain_lastname"            // Captain's last name
+        },
+        "email": "test_email1@gmail.com",                // Captain's email address
+        "vehicle": {
+          "color": "red",                                // Vehicle color
+          "plate": "MP 04 XY 6204",                      // Vehicle plate number
+          "capacity": 3,                                 // Vehicle capacity
+          "vehicleType": "car"                           // Vehicle type
+        }
+      }
+    }
+    ```
+
+
+
+---
+
+### Example cURL Request
+
+```bash
+curl -X GET http://localhost:3000/captain/profile \
+  -H "Authorization: Bearer <your-jwt-token>"
+```
+
+---
+
+## Notes
+
+- The endpoint requires the captain to be authenticated.
+- Ensure the `JWT_SECRET` environment variable is set for token verification.
+
+---
+
+# Captain Logout Endpoint Documentation
+
+---
+
+## Endpoint
+
+`GET /captain/logout`
+
+This endpoint is used to log out the currently authenticated captain by blacklisting their JWT token.
+
+---
+
+### Headers
+
+The request must include a valid JWT token in the `Authorization` header or as a cookie.
+
+### Example Header
+
+```json
+{
+  "Authorization": "Bearer <your-jwt-token>"
+}
+```
+
+---
+
+### Responses
+
+#### Success
+
+- **200 OK**
+  - Logout successful.
+  - Example response:
+    ```json
+    {
+      "message": "Logout successfully"
+    }
+    ```
+
+
+---
+
+### Example cURL Request
+
+```bash
+curl -X GET http://localhost:3000/captain/logout \
+  -H "Authorization: Bearer <your-jwt-token>"
+```
+
+---
+
+## Notes
+
+- The endpoint requires the captain to be authenticated.
+- The token is added to a blacklist to prevent further use.
+- Ensure the `JWT_SECRET` environment variable is set for token verification.
 
