@@ -1,40 +1,41 @@
-import React, { useState, /*useContext */} from 'react'
-import { Link } from 'react-router-dom'   // ✅ ADDED THIS LINE
+import React, { useState, /*useContext */ } from 'react'
+import { Link } from 'react-router-dom'   
 //import { Link, useNavigate } from 'react-router-dom'
 //import axios from 'axios'
 //import { UserDataContext } from '../context/UserContext'
 
 const UserSignup = () => {
-  const [ email, setEmail ] = useState('')
-  const [ password, setPassword ] = useState('')
-  const [ firstName, setFirstName ] = useState('')
-  const [ lastName, setLastName ] = useState('')
- const [ /*userData,*/setUserData ] = useState({})
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [UserData, setUserData] = useState({})
 
- // const navigate = useNavigate()
+  // const navigate = useNavigate()
 
   //const { /*user,*/ setUser } = useContext(UserDataContext)
 
-  //const [userData, setUserData] = useState({});
 
-const submitHandler = async (e) => {
+
+  const submitHandler = async (e) => {
     e.preventDefault();
 
-    setUserData ({
-        username: {
-            firstname: firstName,
-            lastname: lastName
-        },
-        email: email,
-        password: password
+    setUserData({
+      fullname: {
+        firstname: firstName,
+        lastname: lastName
+      },
+      email,
+      password
     });
+
 
 
     //const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUser)
 
 
-  
-    
+
+
 
     // if (response.status === 201) {
     //   const data = response.data

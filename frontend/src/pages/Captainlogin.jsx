@@ -9,7 +9,7 @@ const Captainlogin = () => {
   const [ email, setEmail ] = useState('')
   const [ password, setPassword ] = useState('')
 
-  const [ captainData, setCaptainData ] = useState({});
+  const [ CaptainData, setCaptainData ] = useState({});
   // const { captain, setCaptain } = useContext(CaptainDataContext
 
   //const navigate = useNavigate()
@@ -22,7 +22,7 @@ const Captainlogin = () => {
       email: email,
       password: password
     })
-    console.log(captainData)
+
     
 
    // const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/login`, captain)

@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 const UserLogin = () => {
   const [ email, setEmail ] = useState('')
   const [ password, setPassword ] = useState('')
-  const [ userData, setUserData ] = useState({})
+  const [ UserData, setUserData ] = useState({})
 
   // const { user, setUser } = useContext(UserDataContext)
   // const navigate = useNavigate()
@@ -20,7 +20,7 @@ const UserLogin = () => {
       email: email,
       password: password
     })
-    console.log(userData)
+
 
     // const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, userData)
     // if (response.status === 200) {
