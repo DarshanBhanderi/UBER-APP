@@ -27,7 +27,7 @@ const CaptainSignup = () => {
       vehicle: {
         color: vehicleColor,
         plate: vehiclePlate,
-        capacity: Number(vehicleCapacity), // convert to number
+        capacity: Number(vehicleCapacity), 
         vehicleType
       }
     };
