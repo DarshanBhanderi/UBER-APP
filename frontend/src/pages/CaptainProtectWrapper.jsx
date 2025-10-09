@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 const CaptainProtectWrapper = ({ children }) => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('captain-token'); // ✅ Correct key
     const navigate = useNavigate()
     const { setCaptain } = useContext(CaptainDataContext)
     const [isLoading, setIsLoading] = useState(true)
@@ -25,12 +25,12 @@ const CaptainProtectWrapper = ({ children }) => {
                 if (response.status === 200) {
                     setCaptain(response.data.captain)
                 } else {
-                    localStorage.removeItem('token')
+                    localStorage.removeItem('captain-token')
                     navigate('/captain-login')
                 }
             } catch (err) {
                 console.error('Error fetching captain profile:', err)
-                localStorage.removeItem('token')
+                localStorage.removeItem('captain-token')
                 navigate('/captain-login')
             } finally {
                 setIsLoading(false)

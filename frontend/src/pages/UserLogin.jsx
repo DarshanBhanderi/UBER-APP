@@ -7,7 +7,7 @@ const UserLogin = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const { setUser } = useContext(UserDataContext) // ✅ we only need setUser
+  const { setUser } = useContext(UserDataContext)
   const navigate = useNavigate()
 
   const submitHandler = async (e) => {
@@ -28,8 +28,13 @@ const UserLogin = () => {
 
       if (response.status === 200) {
         const data = response.data
+
+        // ✅ Save user and token in both context and localStorage
         setUser(data.user)
         localStorage.setItem('token', data.token)
+        localStorage.setItem('user', JSON.stringify(data.user))
+
+        // ✅ Navigate to home page
         navigate('/home')
       }
     } catch (err) {
@@ -37,7 +42,7 @@ const UserLogin = () => {
       alert(err.response?.data?.message || 'Login failed')
     }
 
-    // Reset input fields
+    // ✅ Reset input fields
     setEmail('')
     setPassword('')
   }
@@ -48,7 +53,7 @@ const UserLogin = () => {
         <img
           className='w-16 mb-10'
           src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYQy-OIkA6In0fTvVwZADPmFFibjmszu2A0g&s"
-          alt=""
+          alt="Logo"
         />
 
         <form onSubmit={submitHandler}>
@@ -72,13 +77,19 @@ const UserLogin = () => {
             placeholder='password'
           />
 
-          <button className='bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg'>
+          <button
+            type="submit"
+            className='bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg'
+          >
             Login
           </button>
         </form>
 
         <p className='text-center'>
-          New here? <Link to='/signup' className='text-blue-600'>Create new Account</Link>
+          New here?{' '}
+          <Link to='/signup' className='text-blue-600'>
+            Create new Account
+          </Link>
         </p>
       </div>
 

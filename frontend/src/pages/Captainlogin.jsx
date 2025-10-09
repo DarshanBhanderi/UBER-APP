@@ -6,7 +6,7 @@ import { CaptainDataContext } from '../context/CaptainDataContext';
 const Captainlogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const {  setCaptain } = useContext(CaptainDataContext);
+  const { setCaptain } = useContext(CaptainDataContext);
   const navigate = useNavigate();
 
   const submitHandler = async (e) => {
@@ -20,16 +20,15 @@ const Captainlogin = () => {
       if (response.status === 200) {
         const data = response.data;
 
-        setCaptain(data.captain);          // update context
-        localStorage.setItem('token', data.token); // store token
-        navigate('/captain-home');         // redirect
+        setCaptain(data.captain);
+        localStorage.setItem('captain-token', data.token); // ✅ store under 'captain-token'
+        navigate('/captain-home');
       }
     } catch (err) {
       console.error('Login failed:', err.response?.data || err.message);
       alert(err.response?.data?.message || 'Login failed. Please check your credentials.');
     }
 
-    // reset form
     setEmail('');
     setPassword('');
   };

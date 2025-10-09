@@ -10,10 +10,11 @@ import UserProtectWrapper from './pages/UserProtectWrapper'
 import UserLogout from './pages/UserLogout'
 import CaptainHome from './pages/CaptainHome'
 import CaptainProtectWrapper from './pages/CaptainProtectWrapper'
-//import CaptainLogout from './pages/CaptainLogout'
+import CaptainLogout from './pages/CaptainLogout'
 //import Riding from './pages/Riding'
 //import CaptainRiding from './pages/CaptainRiding'
 //import 'remixicon/fonts/remixicon.css'
+
 
 const App = () => {
 
@@ -42,12 +43,12 @@ const App = () => {
           </CaptainProtectWrapper>
 
         } />
-        {/* <Route path='/captain/logout' element={
+        { <Route path='/captain/logout' element={
           <CaptainProtectWrapper>
             <CaptainLogout />
           </CaptainProtectWrapper>
         } />
-      </Routes> */}
+      }
     </Routes>
     </div>
   )
