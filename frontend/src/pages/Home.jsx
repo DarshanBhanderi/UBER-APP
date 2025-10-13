@@ -64,7 +64,7 @@ const Home = () => {
             socket.off('ride-confirmed', handleRideConfirmed);
             socket.off('ride-started', handleRideStarted);
         };
-    }, [socket, user]); ////-4
+    }, [socket, user, navigate]); ////-4
 
     const handlePickupChange = async (e) => {
         setPickup(e.target.value)
@@ -182,7 +182,7 @@ const Home = () => {
     }
 
     async function createRide() {
-        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`, {
+        await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`, {
             pickup,
             destination,
             vehicleType
@@ -251,7 +251,9 @@ const Home = () => {
                 <WaitingForDriver ride={ride} setVehicleFound={setVehicleFound} setWaitingForDriver={setWaitingForDriver} waitingForDriver={waitingForDriver} />
             </div>
         </div>
+        
     )
 }
 
 export default Home
+
