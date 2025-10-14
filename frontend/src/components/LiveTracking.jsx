@@ -49,8 +49,9 @@ const LiveTracking = () => {
 
         updatePosition(); // Initial position update
 
-        const intervalId = setInterval(updatePosition, 1000); // Update every 10 seconds
+        const intervalId = setInterval(updatePosition, 1000); // Update every second
 
+        return () => clearInterval(intervalId); // Cleanup interval on unmount
     }, []);
 
     return (
