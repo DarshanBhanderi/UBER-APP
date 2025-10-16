@@ -33,6 +33,7 @@ const LookingForDriver = (props) => {
                         </div>
                     </div>
                 </div>
+                {/* {<button> make a Payment</button> } */}
             </div>
         </div>
     )

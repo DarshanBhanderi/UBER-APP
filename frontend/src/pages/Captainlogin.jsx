@@ -25,8 +25,12 @@ const Captainlogin = () => {
         navigate('/captain-home');
       }
     } catch (err) {
-      console.error('Login failed:', err.response?.data || err.message);
-      alert(err.response?.data?.message || 'Login failed. Please check your credentials.');
+      const message =
+    err.response && err.response.data && err.response.data.message
+      ? err.response.data.message
+      : err.message || 'Login failed';
+  console.error('Login failed:', message);
+  alert(message);
     }
 
     setEmail('');
