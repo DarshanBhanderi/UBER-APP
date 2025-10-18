@@ -14,6 +14,8 @@ import CaptainLogout from './pages/CaptainLogout'
 import Riding from './pages/Riding'
 import CaptainRiding from './pages/CaptainRiding'
 import 'remixicon/fonts/remixicon.css'
+// temp
+
 
 
 const App = () => {
@@ -25,6 +27,8 @@ const App = () => {
         <Route path='/login' element={<UserLogin />} />
         <Route path='/riding' element={<Riding />} />
         <Route path='/captain-riding' element={<CaptainRiding />} />
+
+        
       
 
         <Route path='/signup' element={<UserSignup />} />
