@@ -1,22 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { UserDataContext } from './UserDataContext';
+import React, { useState, useEffect } from 'react'
+import { UserDataContext } from './UserDataContext'
+import { getStoredSessionData } from '../lib/http'
 
 const UserContext = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null)
 
-  // Restore user when app loads
   useEffect(() => {
-    const savedUser = localStorage.getItem('user');
+    const savedUser = getStoredSessionData('user')
+
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      setUser(savedUser)
     }
-  }, []);
+  }, [])
 
   return (
     <UserDataContext.Provider value={{ user, setUser }}>
       {children}
     </UserDataContext.Provider>
-  );
-};
+  )
+}
 
-export default UserContext;
+export default UserContext

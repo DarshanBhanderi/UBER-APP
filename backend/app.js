@@ -1,126 +1,89 @@
-// const dotenv = require('dotenv');
-// dotenv.config();
-// const express = require('express');
-// const cors = require('cors');
-// const app = express();
-// const cookieParser = require('cookie-parser');
-// const connectToDb = require('./db/db');
-// const userRoutes = require('./routes/user.routes');
-// const captainRoutes = require('./routes/captain.routes');
-// const mapsRoutes = require('./routes/maps.routes');
-// //const rideRoutes = require('./routes/ride.routes');
+const dotenv = require('dotenv')
+dotenv.config()
 
-// connectToDb();
+const express = require('express')
+const cors = require('cors')
+const cookieParser = require('cookie-parser')
 
-// app.use(cors());
-// app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
-// app.use(cookieParser());
+const connectToDb = require('./db/db')
+const userRoutes = require('./routes/user.routes')
+const captainRoutes = require('./routes/captain.routes')
+const mapsRoutes = require('./routes/maps.routes')
+const rideRoutes = require('./routes/ride.routes')
 
+const app = express()
 
+connectToDb()
 
-// app.get('/', (req, res) => {
-//     res.send('Hello World');
-// });
+const normalizeOrigin = (origin) => (origin || '').replace(/\/+$/, '')
 
-// app.use('/users', userRoutes);
-// app.use('/captains', captainRoutes);
-// app.use('/maps', mapsRoutes);
-// //app.use('/rides', rideRoutes);
+const allowedOrigins = new Set(
+  [
+    process.env.FRONTEND_URL,
+    ...(process.env.ALLOWED_ORIGINS || '').split(','),
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+    'https://uber-app-seven.vercel.app'
+  ]
+    .map((origin) => normalizeOrigin(origin).trim())
+    .filter(Boolean)
+)
 
+const isAllowedOrigin = (origin) => {
+  if (!origin) {
+    return true
+  }
 
+  const normalizedOrigin = normalizeOrigin(origin)
 
+  if (allowedOrigins.has(normalizedOrigin)) {
+    return true
+  }
 
-// module.exports = app;
+  try {
+    const hostname = new URL(normalizedOrigin).hostname
+    return hostname.endsWith('.vercel.app')
+  } catch {
+    return false
+  }
+}
 
-// const dotenv = require('dotenv');
-// dotenv.config();
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (isAllowedOrigin(origin)) {
+      callback(null, true)
+      return
+    }
 
-// const express = require('express');
-// const cors = require('cors');
-// const cookieParser = require('cookie-parser');
+    callback(new Error('Not allowed by CORS'))
+  },
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
+}
 
-// const connectToDb = require('./db/db');
-// const userRoutes = require('./routes/user.routes');
-// const captainRoutes = require('./routes/captain.routes');
-// const mapsRoutes = require('./routes/maps.routes');
+app.use(cors(corsOptions))
+app.options('*', cors(corsOptions))
 
-// const app = express();
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
 
-// connectToDb();
-
-// app.use(cors({
-//   origin: "*",
-//   credentials: true
-// }));
-
-// app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
-// app.use(cookieParser());
-
-// app.get('/', (req, res) => {
-//     res.send('Backend is running 🚀');
-// });
-
-// app.use('/api/users', userRoutes);
-// app.use('/api/captains', captainRoutes);
-// app.use('/api/maps', mapsRoutes);
-
-// app.use((err, req, res, next) => {
-//     console.error(err.stack);
-//     res.status(500).json({
-//         success: false,
-//         message: "Internal Server Error"
-//     });
-// });
-
-// module.exports = app;
-const dotenv = require('dotenv');
-dotenv.config();
-
-const express = require('express');
-const cors = require('cors');
-const cookieParser = require('cookie-parser');
-
-const connectToDb = require('./db/db');
-const userRoutes = require('./routes/user.routes');
-const captainRoutes = require('./routes/captain.routes');
-const mapsRoutes = require('./routes/maps.routes');
-
-const app = express();
-
-// DB connect
-connectToDb();
-
-// ✅ CORS FIX (VERY IMPORTANT)
-app.use(cors({
-  origin: "https://uber-app-seven.vercel.app", // 👈 tamaru frontend URL
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
-}));
-
-// middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
-
-// test route
 app.get('/', (req, res) => {
-    res.send('Backend is running 🚀');
-});
+  res.send('Backend is running')
+})
 
-// ✅ ROUTES (IMPORTANT: /api prefix match karo frontend ma)
-app.use('/api/users', userRoutes);
-app.use('/api/captains', captainRoutes);
-app.use('/api/maps', mapsRoutes);
+app.use('/api/users', userRoutes)
+app.use('/api/captains', captainRoutes)
+app.use('/api/maps', mapsRoutes)
+app.use('/api/rides', rideRoutes)
 
-// error handler
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({
-        success: false,
-        message: "Internal Server Error"
-    });
-});
+  console.error(err.stack)
+  res.status(500).json({
+    success: false,
+    message: err.message || 'Internal Server Error'
+  })
+})
 
-module.exports = app;
+module.exports = app

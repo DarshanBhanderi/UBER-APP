@@ -1,32 +1,38 @@
-import React, { createContext, useEffect } from 'react';
-import { io } from 'socket.io-client';
+import React, { createContext, useEffect } from 'react'
+import { io } from 'socket.io-client'
 
-// ✅ Always define the context first
-const SocketContext = createContext(null);
+const SocketContext = createContext(null)
 
-// ✅ Create a single socket instance (environment safe)
-const socket = io(import.meta.env.VITE_BASE_URL, {
+const socket = io((import.meta.env.VITE_BASE_URL || '').replace(/\/+$/, ''), {
   transports: ['websocket'],
-});
+  withCredentials: true
+})
 
 const SocketProvider = ({ children }) => {
   useEffect(() => {
-    socket.on('connect', () => console.log('✅ Socket connected:', socket.id));
-    socket.on('disconnect', () => console.log('❌ Socket disconnected'));
+    const onConnect = () => {
+      console.log('Socket connected:', socket.id)
+    }
+
+    const onDisconnect = () => {
+      console.log('Socket disconnected')
+    }
+
+    socket.on('connect', onConnect)
+    socket.on('disconnect', onDisconnect)
 
     return () => {
-      socket.off('connect');
-      socket.off('disconnect');
-    };
-  }, []);
+      socket.off('connect', onConnect)
+      socket.off('disconnect', onDisconnect)
+    }
+  }, [])
 
   return (
     <SocketContext.Provider value={{ socket }}>
       {children}
     </SocketContext.Provider>
-  );
-};
+  )
+}
 
-// ✅ Default + Named Export
-export { SocketContext };
-export default SocketProvider;
+export { SocketContext }
+export default SocketProvider
